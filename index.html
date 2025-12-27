@@ -5,7 +5,6 @@
 <title>Private Celebration</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- GOOGLE FONTS -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 
 <style>
@@ -22,12 +21,11 @@ body {
 section {
     display: none;
     height: 100vh;
-    padding: 24px;
-    animation: cinematic 1.8s ease forwards;
+    padding: 20px;
 }
 .active { display: block; }
 
-/* INPUT + BUTTON */
+/* INPUT */
 input {
     padding: 14px;
     width: 220px;
@@ -36,7 +34,6 @@ input {
     text-align: center;
     font-size: 16px;
 }
-
 button {
     padding: 14px 34px;
     border-radius: 30px;
@@ -48,68 +45,68 @@ button {
     margin-top: 18px;
 }
 
-/* VIDEO */
-video {
+/* IMAGE */
+.mainImage {
     width: 92%;
     max-width: 650px;
     border-radius: 18px;
-    margin-top: 20px;
+    margin: 20px auto;
     box-shadow: 0 0 45px rgba(255,120,180,0.35);
 }
 
-/* CINEMATIC TEXT */
-#messageBox {
+/* SCROLLING TEXT AREA */
+#scrollArea {
+    height: 260px;
+    overflow: hidden;
     max-width: 760px;
-    margin: 30px auto;
-    line-height: 1.55;
-    font-size: 19px;
+    margin: auto;
+    position: relative;
 }
+
+#messageBox {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
 .line {
     opacity: 0;
-    animation: fadeUp 1.2s forwards;
-    margin-bottom: 10px;
+    animation: fadeUp 1s forwards;
+    margin: 6px 0;
+    font-size: 19px;
 }
+
 .signature {
     font-family: 'Dancing Script', cursive;
     font-size: 26px;
 }
 
-/* PAGE 3 – ART STYLE */
+/* PAGE 3 BACKGROUND */
+#page3 {
+    background: url("bg31.jpg") center/cover no-repeat;
+    text-shadow: 0 2px 12px #000;
+}
+
+/* ART */
 .art {
     max-width: 720px;
     margin: auto;
     font-size: 20px;
+    background: rgba(0,0,0,.55);
+    padding: 20px;
+    border-radius: 16px;
 }
 .sketch {
-    border-left: 2px dashed rgba(255,255,255,.4);
-    padding-left: 18px;
-    margin: 18px 0;
-    animation: draw 2s ease forwards;
+    border-left: 2px dashed rgba(255,255,255,.5);
+    padding-left: 16px;
+    margin: 16px 0;
+    animation: fadeUp 1.2s forwards;
 }
 
 /* ANIMATIONS */
-@keyframes cinematic {
-    from { opacity: 0; transform: scale(1.1); filter: blur(6px); }
-    to { opacity: 1; transform: scale(1); filter: blur(0); }
-}
 @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(18px); }
     to { opacity: 1; transform: translateY(0); }
-}
-@keyframes draw {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* REACTION */
-#reactionBox {
-    position: fixed;
-    bottom: 16px;
-    right: 16px;
-    background: rgba(255,255,255,.15);
-    padding: 10px 14px;
-    border-radius: 12px;
-    display: none;
 }
 </style>
 </head>
@@ -127,16 +124,12 @@ video {
 <section id="page2">
     <h1>✨ A Little Magic for Snigdha ✨</h1>
 
-    <video id="video" controls playsinline muted>
-        <source src="video.mp4" type="video/mp4">
-    </video>
+    <!-- IMAGE INSTEAD OF VIDEO -->
+    <img src="main.jpg" class="mainImage">
 
-    <div id="messageBox"></div>
-
-    <h3>💖 How did this feel?</h3>
-    <button onclick="react('😍 Smile')">😍 Smile</button>
-    <button onclick="react('🥹 Emotional')">🥹 Emotional</button>
-    <button onclick="react('❤️ Loved it')">❤️ Loved it</button>
+    <div id="scrollArea">
+        <div id="messageBox"></div>
+    </div>
 </section>
 
 <!-- PAGE 3 -->
@@ -144,19 +137,17 @@ video {
     <h1>🌟 Why 31st December Is Special</h1>
 
     <div class="art">
-        <div class="sketch">✏️ The final breath of a year</div>
+        <div class="sketch">✏️ The last heartbeat of a year</div>
         <div class="sketch">✏️ A pause between endings and beginnings</div>
-        <div class="sketch">✏️ A reminder that every close carries hope</div>
-        <div class="sketch">✏️ Born on a day that teaches renewal</div>
+        <div class="sketch">✏️ Proof that closure creates strength</div>
+        <div class="sketch">✏️ Born on a day of renewal</div>
 
-        <p style="margin-top:30px;">
+        <p style="margin-top:24px;">
             Not everyone is born on a day<br>
-            that understands how to move forward 🌙
+            that teaches the world how to move forward ✨
         </p>
     </div>
 </section>
-
-<div id="reactionBox"></div>
 
 <script>
 const PASSWORD = "28/12/2025";
@@ -189,21 +180,18 @@ function start() {
         return;
     }
     goPage(2);
-
-    const video = document.getElementById("video");
-    video.play().catch(()=>{});
-
-    typeLines();
+    typeAndScroll();
 }
 
-function typeLines() {
+function typeAndScroll() {
     const box = document.getElementById("messageBox");
+    const area = document.getElementById("scrollArea");
     let i = 0;
 
     const interval = setInterval(() => {
         if (i >= LINES.length) {
             clearInterval(interval);
-            setTimeout(() => goPage(3), 3500);
+            setTimeout(() => goPage(3), 2500);
             return;
         }
 
@@ -213,20 +201,16 @@ function typeLines() {
         div.textContent = LINES[i];
         box.appendChild(div);
 
+        // AUTO SCROLL UP
+        box.style.bottom = "-" + (box.scrollHeight - area.clientHeight) + "px";
+
         i++;
-    }, 900);
+    }, 850);
 }
 
 function goPage(n) {
     document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
     document.getElementById("page" + n).classList.add("active");
-}
-
-function react(val) {
-    if (localStorage.getItem("reaction")) return;
-    localStorage.setItem("reaction", val);
-    reactionBox.style.display = "block";
-    reactionBox.innerHTML = "💌 Reaction: <b>" + val + "</b>";
 }
 </script>
 
