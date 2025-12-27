@@ -6,174 +6,196 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ===== GLOBAL ===== */
 body {
-    background: #000;
+    margin: 0;
+    background: radial-gradient(circle at top, #111, #000);
     color: #fff;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     text-align: center;
-    padding: 30px;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
+/* ===== INPUT & BUTTON ===== */
 input, button {
-    padding: 12px;
+    padding: 12px 18px;
     font-size: 16px;
     margin: 10px;
-    border-radius: 6px;
+    border-radius: 30px;
     border: none;
 }
 
 button {
-    background: #ff4f9a;
+    background: linear-gradient(135deg, #ff4f9a, #ff2f6d);
     color: white;
     cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
-#countdown {
-    margin-top: 20px;
+button:hover {
+    transform: scale(1.05);
+}
+
+/* ===== CINEMATIC ANIMATION ===== */
+.fade-in {
+    animation: fadeIn 2s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+#text {
+    white-space: pre-line;
     font-size: 18px;
-    color: #ffb3d9;
+    line-height: 1.7;
+    max-width: 700px;
+    margin: auto;
 }
 
-#fireworks {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 999;
-}
-
+/* ===== VIDEO ===== */
 video {
-    max-width: 100%;
-    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
     margin-top: 20px;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(255,79,154,0.4);
+}
+
+/* ===== HEARTS ===== */
+.heart {
+    position: fixed;
+    bottom: 0;
+    font-size: 20px;
+    animation: float 6s linear infinite;
+    opacity: 0.8;
+}
+
+@keyframes float {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-120vh); opacity: 0; }
+}
+
+/* ===== REACTION BOX ===== */
+#reactionBox {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    display: none;
 }
 </style>
 </head>
 
-<body>
+<body class="fade-in">
 
 <h2>🔐 Private Celebration</h2>
-<p>This page is private and opens only for the right person.</p>
+<p>This page opens only for the right person.</p>
 
 <input type="password" id="password" placeholder="Enter secret password">
 <br>
 <button onclick="unlock()">Unlock</button>
 
-<div id="countdown"></div>
-
-<canvas id="fireworks"></canvas>
+<div id="reactionBox"></div>
 
 <script>
-/* SETTINGS — OPEN NOW */
+/* ===== SETTINGS ===== */
 const correctPassword = "28/12/2025";
 
-/* 🔥 Unlock date set to PAST so it opens immediately */
-const unlockDate = "2025-12-27T00:00:00";
+/* ===== MEDIA (UPLOAD TO GITHUB REPO) ===== */
+const musicLink = "music.mp3";
+const videoLink = "video.mp4";
 
-/* MEDIA */
-const musicLink = "https://drive.google.com/uc?export=download&id=1clPQtzKe0EnJmTMAs51lBok1-VqcO0Xc";
-const videoLink = "https://drive.google.com/uc?export=download&id=16pp2QdRCDP1z7a1kegc4ydSFq3QqND_a";
-
-/* COUNTDOWN */
-const countdownEl = document.getElementById("countdown");
-
-function updateCountdown() {
-    const now = new Date().getTime();
-    const target = new Date(unlockDate).getTime();
-    const diff = target - now;
-
-    if (diff <= 0) {
-        countdownEl.innerHTML = "🎉 It’s time!";
-        return;
-    }
-}
-
-updateCountdown();
-
-/* UNLOCK */
+/* ===== UNLOCK ===== */
 function unlock() {
-    const entered = document.getElementById("password").value.trim();
-
-    if (entered !== correctPassword) {
+    if (document.getElementById("password").value !== correctPassword) {
         alert("❌ Incorrect password");
         return;
     }
 
     document.body.innerHTML = `
-        <canvas id="fireworks"></canvas>
-
-        <h1>✨ A Little Magic for Snigdha ✨</h1>
+        <h1 class="fade-in">✨ A Little Magic for Snigdha ✨</h1>
         <p id="text"></p>
 
-        <audio id="music" controls autoplay>
+        <audio id="music">
             <source src="${musicLink}" type="audio/mpeg">
         </audio>
 
-        <video controls autoplay playsinline>
+        <video id="video" playsinline controls>
             <source src="${videoLink}" type="video/mp4">
         </video>
 
-        <h2>💖 Tell me how you felt</h2>
+        <h2>💖 How did you feel?</h2>
+        <button onclick="saveReaction('😍 This made me smile')">😍 This made me smile</button><br>
+        <button onclick="saveReaction('🥹 I got emotional')">🥹 I got emotional</button><br>
+        <button onclick="saveReaction('❤️ I loved it')">❤️ I loved it</button><br>
+        <button onclick="saveReaction('😳 You surprised me')">😳 You surprised me</button>
 
-        <form action="YOUR_GOOGLE_FORM_LINK" method="POST" target="_blank">
-            <button>😍 This made me smile</button><br><br>
-            <button>🥹 I got emotional</button><br><br>
-            <button>❤️ I loved it</button><br><br>
-            <button>😳 You surprised me</button>
-        </form>
+        <div id="reactionBox"></div>
     `;
 
-    startFireworks();
+    document.getElementById("music").play().catch(()=>{});
+    document.getElementById("video").play().catch(()=>{});
+
     typeText();
+    startHearts();
+    showSavedReaction();
 }
 
-/* TYPING EFFECT */
+/* ===== TYPING EFFECT ===== */
 function typeText() {
-    const message = `Hey Snigdha ❤️
+    const msg = `Hey Snigdha ❤️
 
 This moment was quietly waiting just for you…
 
-Someone wanted to make you smile today 🌸  
-and remind you that you are truly special.
+Someone wanted to remind you
+how special you truly are 🌸
 
 🎉 HAPPY BIRTHDAY 🎉
 
 This was made only for you ✨`;
 
     let i = 0;
-    const p = document.getElementById("text");
+    const el = document.getElementById("text");
 
     const typing = setInterval(() => {
-        p.innerHTML += message.charAt(i);
+        el.innerHTML += msg.charAt(i);
         i++;
-        if (i >= message.length) clearInterval(typing);
-    }, 50);
+        if (i >= msg.length) clearInterval(typing);
+    }, 45);
 }
 
-/* FIREWORKS */
-function startFireworks() {
-    const canvas = document.getElementById("fireworks");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    function rand(min, max) {
-        return Math.random() * (max - min) + min;
-    }
-
+/* ===== HEART ANIMATION ===== */
+function startHearts() {
     setInterval(() => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < 40; i++) {
-            ctx.beginPath();
-            ctx.arc(rand(0, canvas.width), rand(0, canvas.height / 2), rand(2, 4), 0, Math.PI * 2);
-            ctx.fillStyle = `hsl(${rand(0,360)},100%,60%)`;
-            ctx.fill();
-        }
-    }, 200);
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "💖";
+        heart.style.left = Math.random() * 100 + "vw";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+    }, 500);
+}
+
+/* ===== REACTION STORAGE ===== */
+function saveReaction(reaction) {
+    localStorage.setItem("reaction", reaction);
+    showSavedReaction();
+    alert("💗 Reaction saved");
+}
+
+function showSavedReaction() {
+    const reaction = localStorage.getItem("reaction");
+    if (reaction) {
+        const box = document.getElementById("reactionBox");
+        box.style.display = "block";
+        box.innerHTML = `💌 Reaction: <b>${reaction}</b>`;
+    }
 }
 </script>
 
