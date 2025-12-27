@@ -4,28 +4,56 @@
 <meta charset="UTF-8">
 <title>Private Celebration</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body {
-    background: #000;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 30px;
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 30px;
+    overflow-x: hidden;
 }
-.hidden { display: none; }
+
 input, button {
-    padding: 12px;
-    font-size: 16px;
-    margin: 10px;
-    border-radius: 6px;
-    border: none;
+    padding: 12px;
+    font-size: 16px;
+    margin: 10px;
+    border-radius: 6px;
+    border: none;
 }
+
 button {
-    background: #ff4f9a;
-    color: white;
+    background: #ff4f9a;
+    color: white;
+    cursor: pointer;
+}
+
+#countdown {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #ffb3d9;
+}
+
+/* Fireworks */
+#fireworks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+}
+
+video {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
 }
 </style>
 </head>
+
 <body>
 
 <h2>🔒 Private Access</h2>
@@ -35,69 +63,159 @@ button {
 <br>
 <button onclick="unlock()">Unlock</button>
 
-<div id="content" class="hidden"></div>
+<div id="countdown"></div>
+
+<canvas id="fireworks"></canvas>
 
 <script>
-/* 🔐 SECURITY SETTINGS */
+/* SETTINGS */
 const correctPassword = "31/12/2025";
-const unlockDate = "2025-12-31";
+const unlockDate = "2025-12-31T00:00:00";
 
-/* 🔗 PRIVATE MEDIA LINKS (already converted) */
+/* MEDIA */
 const musicLink = "https://drive.google.com/uc?export=download&id=1clPQtzKe0EnJmTMAs51lBok1-VqcO0Xc";
 const videoLink = "https://drive.google.com/uc?export=download&id=16pp2QdRCDP1z7a1kegc4ydSFq3QqND_a";
 
-function unlock() {
-    const entered = document.getElementById("password").value;
-    const today = new Date().toISOString().split("T")[0];
+/* COUNTDOWN */
+const countdownEl = document.getElementById("countdown");
 
-    if (entered !== correctPassword) {
-        alert("❌ Access denied");
-        return;
-    }
+function updateCountdown() {
+    const now = new Date().getTime();
+    const target = new Date(unlockDate).getTime();
+    const diff = target - now;
 
-    if (today < unlockDate) {
-        alert("⏳ Not today… come back on a special day ✨");
-        return;
-    }
+    if (diff <= 0) {
+        countdownEl.innerHTML = "🎉 It’s time!";
+        return;
+    }
 
-    document.body.innerHTML = `
-        <h1>✨ A Little Magic for Snigdha ✨</h1>
-        <p id="text"></p>
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
 
-        <audio autoplay loop>
-            <source src="${musicLink}" type="audio/mpeg">
-        </audio>
-
-        <video width="100%" controls autoplay>
-            <source src="${videoLink}" type="video/mp4">
-        </video>
-    `;
-
-    typeText();
+    countdownEl.innerHTML = `⏳ Unlocks in: ${d} days ${h}h ${m}m ${s}s`;
 }
 
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+/* UNLOCK */
+function unlock() {
+    const entered = document.getElementById("password").value.trim();
+    const now = new Date();
+
+    if (entered !== correctPassword) {
+        alert("❌ Access denied");
+        return;
+    }
+
+    if (now < new Date(unlockDate)) {
+        alert("⏳ Not today… come back on a special day ✨");
+        return;
+    }
+
+    document.body.innerHTML = `
+        <canvas id="fireworks"></canvas>
+
+        <h1>✨ A Little Magic for Snigdha ✨</h1>
+        <p id="text"></p>
+
+        <audio id="music" controls>
+            <source src="${musicLink}" type="audio/mpeg">
+        </audio>
+
+        <video controls autoplay playsinline>
+            <source src="${videoLink}" type="video/mp4">
+        </video>
+
+        <h2>💖 Tell me how you felt</h2>
+
+        <form action="YOUR_GOOGLE_FORM_LINK" method="POST" target="_blank">
+            <button name="entry.123456" value="😍 This made me smile">
+                😍 This made me smile
+            </button><br><br>
+
+            <button name="entry.123456" value="🥹 I got emotional">
+                🥹 I got emotional
+            </button><br><br>
+
+            <button name="entry.123456" value="❤️ I loved it">
+                ❤️ I loved it
+            </button><br><br>
+
+            <button name="entry.123456" value="😳 You surprised me">
+                😳 You surprised me
+            </button>
+        </form>
+    `;
+
+    startFireworks();
+    typeText();
+
+    const music = document.getElementById("music");
+    music.play().catch(() => {});
+}
+
+/* TYPING TEXT */
 function typeText() {
-    const message =
-`Hey Snigdha ❤️
+    const message = `Hey Snigdha ❤️
 
 This moment was quietly waiting just for you…
 
-Someone wanted to make you smile today 🌸
+I know you may not know who I am,  
+but I know you as someone truly special to me —  
+someone I proudly call my friend 🤍
+
+Someone wanted to make you smile today 🌸  
+and remind you that you are appreciated more than you know.
 
 🎉 HAPPY BIRTHDAY 🎉
 
+Also, an advance Happy New Year ✨  
+I’m really sorry I couldn’t wish you on Instagram —  
+I didn’t have the option to do it there,  
+so I wanted to wish you in my own little way here.
+
+May this coming year bring you happiness,  
+peace, good health, and many beautiful moments.
+
 This was made only for you ✨`;
 
-    let i = 0;
-    const p = document.getElementById("text");
+    let i = 0;
+    const p = document.getElementById("text");
 
-    const typing = setInterval(() => {
-        p.innerHTML += message.charAt(i);
-        i++;
-        if (i >= message.length) clearInterval(typing);
-    }, 50);
+    const typing = setInterval(() => {
+        p.innerHTML += message.charAt(i);
+        i++;
+        if (i >= message.length) clearInterval(typing);
+    }, 50);
+}
+
+/* FIREWORKS */
+function startFireworks() {
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    function rand(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    setInterval(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < 40; i++) {
+            ctx.beginPath();
+            ctx.arc(rand(0, canvas.width), rand(0, canvas.height / 2), rand(2, 4), 0, Math.PI * 2);
+            ctx.fillStyle = `hsl(${rand(0,360)},100%,60%)`;
+            ctx.fill();
+        }
+    }, 200);
 }
 </script>
 
 </body>
 </html>
+    
