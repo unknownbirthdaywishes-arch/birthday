@@ -2,98 +2,100 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>A Private Moment</title>
+<title>A Private Celebration</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-* { box-sizing: border-box; }
-
 body {
     margin: 0;
-    background: radial-gradient(circle at top, #1c1c1c, #000);
+    background: radial-gradient(circle at top, #111, #000);
     color: #fff;
     font-family: "Segoe UI", sans-serif;
     overflow: hidden;
-}
-
-/* LOCK SCREEN */
-#lock {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 2s ease;
     text-align: center;
 }
 
-#lock input {
-    padding: 14px;
-    width: 230px;
-    border-radius: 30px;
-    border: none;
-    font-size: 16px;
-    text-align: center;
+/* FILM GRAIN */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
 }
 
-#lock button {
-    margin-top: 16px;
-    padding: 14px 34px;
-    border-radius: 30px;
-    border: none;
-    background: linear-gradient(135deg, #ff4f9a, #ff85c2);
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-/* SCENE */
-#scene {
+/* SECTIONS */
+section {
     display: none;
     height: 100vh;
     padding: 20px;
+    animation: fadeZoom 2.2s ease forwards;
+}
+
+.active {
+    display: block;
+}
+
+/* INPUT + BUTTON */
+input {
+    padding: 14px;
+    width: 220px;
+    border-radius: 30px;
+    border: none;
     text-align: center;
-    animation: sceneReveal 2.5s ease forwards;
 }
 
-h1 {
-    margin-top: 10px;
-    font-size: 30px;
-    text-shadow: 0 0 20px rgba(255,120,180,0.4);
+button {
+    padding: 14px 34px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(135deg, #ff4f9a, #ff8ccf);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform .3s ease;
 }
+button:hover { transform: scale(1.05); }
 
+/* TEXT */
 #text {
     white-space: pre-line;
-    font-size: 18px;
-    max-width: 750px;
+    max-width: 760px;
     margin: 30px auto;
     line-height: 1.9;
-    opacity: 0.95;
+    font-size: 18px;
 }
 
+/* VIDEO */
 video {
     width: 90%;
-    max-width: 650px;
+    max-width: 620px;
     border-radius: 18px;
-    margin-top: 25px;
-    box-shadow: 0 0 45px rgba(255,120,180,0.35);
+    box-shadow: 0 0 60px rgba(255,120,180,.35);
 }
 
-/* CANVAS */
+/* PARTICLES */
 canvas {
     position: fixed;
     inset: 0;
     pointer-events: none;
 }
 
-/* ANIMATIONS */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* REACTION */
+#reactionBox {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(255,255,255,.15);
+    padding: 10px 14px;
+    border-radius: 12px;
+    display: none;
+    font-size: 14px;
 }
 
-@keyframes sceneReveal {
-    from { opacity: 0; transform: scale(1.15); filter: blur(8px); }
+/* ANIMATION */
+@keyframes fadeZoom {
+    from { opacity: 0; transform: scale(1.12); filter: blur(6px); }
     to { opacity: 1; transform: scale(1); filter: blur(0); }
 }
 </style>
@@ -101,16 +103,16 @@ canvas {
 
 <body>
 
-<!-- LOCK SCREEN -->
-<div id="lock">
+<!-- PAGE 1 -->
+<section id="page1" class="active">
     <h2>🔒 Private Access</h2>
-    <input id="pass" placeholder="Enter password">
-    <button onclick="unlock()">Unlock</button>
-</div>
+    <input id="password" placeholder="Enter password"><br><br>
+    <button onclick="startExperience()">Begin Experience 🎬</button>
+</section>
 
-<!-- MAIN SCENE -->
-<div id="scene">
-    <canvas id="fx"></canvas>
+<!-- PAGE 2 -->
+<section id="page2">
+    <canvas id="particles"></canvas>
 
     <h1>✨ A Little Magic for Snigdha ✨</h1>
     <p id="text"></p>
@@ -122,12 +124,42 @@ canvas {
     <video id="video" playsinline>
         <source src="video.mp4" type="video/mp4">
     </video>
-</div>
+
+    <h3>💖 How did this feel?</h3>
+    <button onclick="react('😍 This made me smile')">😍 Smile</button><br><br>
+    <button onclick="react('🥹 I got emotional')">🥹 Emotional</button><br><br>
+    <button onclick="react('❤️ I loved it')">❤️ Loved it</button><br><br>
+
+    <button onclick="goPage(3)">Next → Why this day is special</button>
+</section>
+
+<!-- PAGE 3 -->
+<section id="page3">
+    <h1>🌟 Why 31st December Is Rare</h1>
+    <p id="text">
+For more than a thousand years,  
+31st December has symbolized endings and rebirth.
+
+It is the final heartbeat of time,  
+where reflection meets hope.
+
+Being born on this day means:
+• Strength to close chapters  
+• Courage to begin again  
+• A soul connected to renewal  
+
+Not everyone is born on a day  
+that teaches the world how to move forward.
+
+✨ That makes this date — and you — unforgettable.
+    </p>
+</section>
+
+<div id="reactionBox"></div>
 
 <script>
 const PASSWORD = "28/12/2025";
 
-/* YOUR FULL MESSAGE (UNCHANGED) */
 const MESSAGE = `Hey Snigdha ❤️
 
 This moment was quietly waiting just for you…
@@ -150,61 +182,73 @@ peace, good health, and many beautiful moments.
 
 This was made only for you ✨`;
 
-function unlock() {
-    if (document.getElementById("pass").value !== PASSWORD) {
-        alert("❌ Wrong password");
+function startExperience() {
+    if (document.getElementById("password").value !== PASSWORD) {
+        alert("Wrong password");
         return;
     }
 
-    // USER GESTURE → AUTOPLAY ALLOWED
-    document.getElementById("lock").style.display = "none";
-    document.getElementById("scene").style.display = "block";
+    goPage(2);
 
     const music = document.getElementById("music");
     const video = document.getElementById("video");
 
-    music.volume = 0.8;
-    music.play().catch(()=>{});
-    video.play().catch(()=>{});
+    music.volume = 0;
+    music.play();
+    video.play();
+
+    // Fade-in music
+    let v = 0;
+    const fade = setInterval(() => {
+        v += 0.02;
+        music.volume = Math.min(v, 0.8);
+        if (v >= 0.8) clearInterval(fade);
+    }, 120);
 
     typeText();
-    startFireworks();
+    startParticles();
 }
 
-/* TYPEWRITER */
 function typeText() {
     let i = 0;
     const el = document.getElementById("text");
+    el.innerHTML = "";
 
-    const typing = setInterval(() => {
+    const t = setInterval(() => {
         el.innerHTML += MESSAGE.charAt(i);
         i++;
-        if (i >= MESSAGE.length) clearInterval(typing);
-    }, 45);
+        if (i >= MESSAGE.length) clearInterval(t);
+    }, 40);
 }
 
-/* CINEMATIC FIREWORKS */
-function startFireworks() {
-    const c = document.getElementById("fx");
+function goPage(n) {
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    document.getElementById("page" + n).classList.add("active");
+}
+
+function react(val) {
+    localStorage.setItem("reaction", val);
+    const box = document.getElementById("reactionBox");
+    box.style.display = "block";
+    box.innerHTML = "💌 Reaction: <b>" + val + "</b>";
+}
+
+/* SOFT PARTICLES */
+function startParticles() {
+    const c = document.getElementById("particles");
     const ctx = c.getContext("2d");
     c.width = innerWidth;
     c.height = innerHeight;
 
     setInterval(() => {
         ctx.clearRect(0,0,c.width,c.height);
-        for (let i=0;i<70;i++) {
+        for(let i=0;i<50;i++){
             ctx.beginPath();
-            ctx.arc(
-                Math.random()*c.width,
-                Math.random()*c.height*0.6,
-                Math.random()*2.5,
-                0,
-                Math.PI*2
-            );
-            ctx.fillStyle = `hsla(${Math.random()*360},100%,70%,0.9)`;
+            ctx.arc(Math.random()*c.width, Math.random()*c.height, Math.random()*1.8, 0, Math.PI*2);
+            ctx.fillStyle = "rgba(255,180,220,0.6)";
             ctx.fill();
         }
-    }, 160);
+    }, 200);
 }
 </script>
 
