@@ -35,7 +35,6 @@ button {
     color: #ffb3d9;
 }
 
-/* Fireworks */
 #fireworks {
     position: fixed;
     top: 0;
@@ -56,8 +55,8 @@ video {
 
 <body>
 
-<h2>🔒 Private Access</h2>
-<p>This celebration is locked.</p>
+<h2>🔐 Private Celebration</h2>
+<p>This page is private and opens only for the right person.</p>
 
 <input type="password" id="password" placeholder="Enter secret password">
 <br>
@@ -68,9 +67,11 @@ video {
 <canvas id="fireworks"></canvas>
 
 <script>
-/* SETTINGS */
-const correctPassword = "31/12/2025";
-const unlockDate = "2025-12-31T00:00:00";
+/* SETTINGS — OPEN NOW */
+const correctPassword = "28/12/2025";
+
+/* 🔥 Unlock date set to PAST so it opens immediately */
+const unlockDate = "2025-12-27T00:00:00";
 
 /* MEDIA */
 const musicLink = "https://drive.google.com/uc?export=download&id=1clPQtzKe0EnJmTMAs51lBok1-VqcO0Xc";
@@ -88,30 +89,16 @@ function updateCountdown() {
         countdownEl.innerHTML = "🎉 It’s time!";
         return;
     }
-
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
-
-    countdownEl.innerHTML = `⏳ Unlocks in: ${d} days ${h}h ${m}m ${s}s`;
 }
 
-setInterval(updateCountdown, 1000);
 updateCountdown();
 
 /* UNLOCK */
 function unlock() {
     const entered = document.getElementById("password").value.trim();
-    const now = new Date();
 
     if (entered !== correctPassword) {
-        alert("❌ Access denied");
-        return;
-    }
-
-    if (now < new Date(unlockDate)) {
-        alert("⏳ Not today… come back on a special day ✨");
+        alert("❌ Incorrect password");
         return;
     }
 
@@ -121,7 +108,7 @@ function unlock() {
         <h1>✨ A Little Magic for Snigdha ✨</h1>
         <p id="text"></p>
 
-        <audio id="music" controls>
+        <audio id="music" controls autoplay>
             <source src="${musicLink}" type="audio/mpeg">
         </audio>
 
@@ -132,53 +119,27 @@ function unlock() {
         <h2>💖 Tell me how you felt</h2>
 
         <form action="YOUR_GOOGLE_FORM_LINK" method="POST" target="_blank">
-            <button name="entry.123456" value="😍 This made me smile">
-                😍 This made me smile
-            </button><br><br>
-
-            <button name="entry.123456" value="🥹 I got emotional">
-                🥹 I got emotional
-            </button><br><br>
-
-            <button name="entry.123456" value="❤️ I loved it">
-                ❤️ I loved it
-            </button><br><br>
-
-            <button name="entry.123456" value="😳 You surprised me">
-                😳 You surprised me
-            </button>
+            <button>😍 This made me smile</button><br><br>
+            <button>🥹 I got emotional</button><br><br>
+            <button>❤️ I loved it</button><br><br>
+            <button>😳 You surprised me</button>
         </form>
     `;
 
     startFireworks();
     typeText();
-
-    const music = document.getElementById("music");
-    music.play().catch(() => {});
 }
 
-/* TYPING TEXT */
+/* TYPING EFFECT */
 function typeText() {
     const message = `Hey Snigdha ❤️
 
 This moment was quietly waiting just for you…
 
-I know you may not know who I am,  
-but I know you as someone truly special to me —  
-someone I proudly call my friend 🤍
-
 Someone wanted to make you smile today 🌸  
-and remind you that you are appreciated more than you know.
+and remind you that you are truly special.
 
 🎉 HAPPY BIRTHDAY 🎉
-
-Also, an advance Happy New Year ✨  
-I’m really sorry I couldn’t wish you on Instagram —  
-I didn’t have the option to do it there,  
-so I wanted to wish you in my own little way here.
-
-May this coming year bring you happiness,  
-peace, good health, and many beautiful moments.
 
 This was made only for you ✨`;
 
