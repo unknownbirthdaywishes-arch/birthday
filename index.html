@@ -2,200 +2,209 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Private Celebration</title>
+<title>A Private Moment</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== GLOBAL ===== */
+* { box-sizing: border-box; }
+
 body {
     margin: 0;
-    background: radial-gradient(circle at top, #111, #000);
+    background: radial-gradient(circle at top, #1c1c1c, #000);
     color: #fff;
-    font-family: 'Segoe UI', sans-serif;
-    text-align: center;
+    font-family: "Segoe UI", sans-serif;
     overflow: hidden;
 }
 
-/* ===== INPUT & BUTTON ===== */
-input, button {
-    padding: 12px 18px;
-    font-size: 16px;
-    margin: 10px;
+/* LOCK SCREEN */
+#lock {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 2s ease;
+    text-align: center;
+}
+
+#lock input {
+    padding: 14px;
+    width: 230px;
     border-radius: 30px;
     border: none;
+    font-size: 16px;
+    text-align: center;
 }
 
-button {
-    background: linear-gradient(135deg, #ff4f9a, #ff2f6d);
+#lock button {
+    margin-top: 16px;
+    padding: 14px 34px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(135deg, #ff4f9a, #ff85c2);
     color: white;
+    font-size: 16px;
     cursor: pointer;
-    transition: transform 0.3s ease;
 }
 
-button:hover {
-    transform: scale(1.05);
+/* SCENE */
+#scene {
+    display: none;
+    height: 100vh;
+    padding: 20px;
+    text-align: center;
+    animation: sceneReveal 2.5s ease forwards;
 }
 
-/* ===== CINEMATIC ANIMATION ===== */
-.fade-in {
-    animation: fadeIn 2s ease forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.96); }
-    to { opacity: 1; transform: scale(1); }
+h1 {
+    margin-top: 10px;
+    font-size: 30px;
+    text-shadow: 0 0 20px rgba(255,120,180,0.4);
 }
 
 #text {
     white-space: pre-line;
     font-size: 18px;
-    line-height: 1.7;
-    max-width: 700px;
-    margin: auto;
+    max-width: 750px;
+    margin: 30px auto;
+    line-height: 1.9;
+    opacity: 0.95;
 }
 
-/* ===== VIDEO ===== */
 video {
     width: 90%;
-    max-width: 600px;
-    margin-top: 20px;
-    border-radius: 16px;
-    box-shadow: 0 0 30px rgba(255,79,154,0.4);
+    max-width: 650px;
+    border-radius: 18px;
+    margin-top: 25px;
+    box-shadow: 0 0 45px rgba(255,120,180,0.35);
 }
 
-/* ===== HEARTS ===== */
-.heart {
+/* CANVAS */
+canvas {
     position: fixed;
-    bottom: 0;
-    font-size: 20px;
-    animation: float 6s linear infinite;
-    opacity: 0.8;
+    inset: 0;
+    pointer-events: none;
 }
 
-@keyframes float {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(-120vh); opacity: 0; }
+/* ANIMATIONS */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-/* ===== REACTION BOX ===== */
-#reactionBox {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    padding: 12px 16px;
-    border-radius: 12px;
-    font-size: 14px;
-    display: none;
+@keyframes sceneReveal {
+    from { opacity: 0; transform: scale(1.15); filter: blur(8px); }
+    to { opacity: 1; transform: scale(1); filter: blur(0); }
 }
 </style>
 </head>
 
-<body class="fade-in">
+<body>
 
-<h2>🔐 Private Celebration</h2>
-<p>This page opens only for the right person.</p>
+<!-- LOCK SCREEN -->
+<div id="lock">
+    <h2>🔒 Private Access</h2>
+    <input id="pass" placeholder="Enter password">
+    <button onclick="unlock()">Unlock</button>
+</div>
 
-<input type="password" id="password" placeholder="Enter secret password">
-<br>
-<button onclick="unlock()">Unlock</button>
+<!-- MAIN SCENE -->
+<div id="scene">
+    <canvas id="fx"></canvas>
 
-<div id="reactionBox"></div>
+    <h1>✨ A Little Magic for Snigdha ✨</h1>
+    <p id="text"></p>
+
+    <audio id="music">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <video id="video" playsinline>
+        <source src="video.mp4" type="video/mp4">
+    </video>
+</div>
 
 <script>
-/* ===== SETTINGS ===== */
-const correctPassword = "28/12/2025";
+const PASSWORD = "28/12/2025";
 
-/* ===== MEDIA (UPLOAD TO GITHUB REPO) ===== */
-const musicLink = "music.mp3";
-const videoLink = "video.mp4";
-
-/* ===== UNLOCK ===== */
-function unlock() {
-    if (document.getElementById("password").value !== correctPassword) {
-        alert("❌ Incorrect password");
-        return;
-    }
-
-    document.body.innerHTML = `
-        <h1 class="fade-in">✨ A Little Magic for Snigdha ✨</h1>
-        <p id="text"></p>
-
-        <audio id="music">
-            <source src="${musicLink}" type="audio/mpeg">
-        </audio>
-
-        <video id="video" playsinline controls>
-            <source src="${videoLink}" type="video/mp4">
-        </video>
-
-        <h2>💖 How did you feel?</h2>
-        <button onclick="saveReaction('😍 This made me smile')">😍 This made me smile</button><br>
-        <button onclick="saveReaction('🥹 I got emotional')">🥹 I got emotional</button><br>
-        <button onclick="saveReaction('❤️ I loved it')">❤️ I loved it</button><br>
-        <button onclick="saveReaction('😳 You surprised me')">😳 You surprised me</button>
-
-        <div id="reactionBox"></div>
-    `;
-
-    document.getElementById("music").play().catch(()=>{});
-    document.getElementById("video").play().catch(()=>{});
-
-    typeText();
-    startHearts();
-    showSavedReaction();
-}
-
-/* ===== TYPING EFFECT ===== */
-function typeText() {
-    const msg = `Hey Snigdha ❤️
+/* YOUR FULL MESSAGE (UNCHANGED) */
+const MESSAGE = `Hey Snigdha ❤️
 
 This moment was quietly waiting just for you…
 
-Someone wanted to remind you
-how special you truly are 🌸
+I know you may not know who I am,  
+but I know you as someone truly special to me —  
+someone I proudly call my friend 🤍
+
+Someone wanted to make you smile today 🌸  
+and remind you that you are appreciated more than you know.
 
 🎉 HAPPY BIRTHDAY 🎉
 
+Also, an advance Happy New Year ✨  
+I couldn’t wish you on Instagram,  
+so I wanted to wish you in my own little way here.
+
+May this coming year bring you happiness,  
+peace, good health, and many beautiful moments.
+
 This was made only for you ✨`;
 
+function unlock() {
+    if (document.getElementById("pass").value !== PASSWORD) {
+        alert("❌ Wrong password");
+        return;
+    }
+
+    // USER GESTURE → AUTOPLAY ALLOWED
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("scene").style.display = "block";
+
+    const music = document.getElementById("music");
+    const video = document.getElementById("video");
+
+    music.volume = 0.8;
+    music.play().catch(()=>{});
+    video.play().catch(()=>{});
+
+    typeText();
+    startFireworks();
+}
+
+/* TYPEWRITER */
+function typeText() {
     let i = 0;
     const el = document.getElementById("text");
 
     const typing = setInterval(() => {
-        el.innerHTML += msg.charAt(i);
+        el.innerHTML += MESSAGE.charAt(i);
         i++;
-        if (i >= msg.length) clearInterval(typing);
+        if (i >= MESSAGE.length) clearInterval(typing);
     }, 45);
 }
 
-/* ===== HEART ANIMATION ===== */
-function startHearts() {
+/* CINEMATIC FIREWORKS */
+function startFireworks() {
+    const c = document.getElementById("fx");
+    const ctx = c.getContext("2d");
+    c.width = innerWidth;
+    c.height = innerHeight;
+
     setInterval(() => {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerText = "💖";
-        heart.style.left = Math.random() * 100 + "vw";
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 6000);
-    }, 500);
-}
-
-/* ===== REACTION STORAGE ===== */
-function saveReaction(reaction) {
-    localStorage.setItem("reaction", reaction);
-    showSavedReaction();
-    alert("💗 Reaction saved");
-}
-
-function showSavedReaction() {
-    const reaction = localStorage.getItem("reaction");
-    if (reaction) {
-        const box = document.getElementById("reactionBox");
-        box.style.display = "block";
-        box.innerHTML = `💌 Reaction: <b>${reaction}</b>`;
-    }
+        ctx.clearRect(0,0,c.width,c.height);
+        for (let i=0;i<70;i++) {
+            ctx.beginPath();
+            ctx.arc(
+                Math.random()*c.width,
+                Math.random()*c.height*0.6,
+                Math.random()*2.5,
+                0,
+                Math.PI*2
+            );
+            ctx.fillStyle = `hsla(${Math.random()*360},100%,70%,0.9)`;
+            ctx.fill();
+        }
+    }, 160);
 }
 </script>
 
