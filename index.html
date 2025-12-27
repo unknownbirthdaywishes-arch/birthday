@@ -5,12 +5,15 @@
 <title>Private Celebration</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- GOOGLE FONTS -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
 <style>
 body {
     margin: 0;
     background: radial-gradient(circle at top, #111, #000);
     color: #fff;
-    font-family: "Segoe UI", sans-serif;
+    font-family: 'Playfair Display', serif;
     overflow: hidden;
     text-align: center;
 }
@@ -19,13 +22,10 @@ body {
 section {
     display: none;
     height: 100vh;
-    padding: 20px;
-    animation: cinematic 2s ease forwards;
+    padding: 24px;
+    animation: cinematic 1.8s ease forwards;
 }
-
-.active {
-    display: block;
-}
+.active { display: block; }
 
 /* INPUT + BUTTON */
 input {
@@ -45,33 +45,63 @@ button {
     color: #fff;
     font-size: 16px;
     cursor: pointer;
+    margin-top: 18px;
 }
 
 /* VIDEO */
 video {
-    width: 90%;
+    width: 92%;
     max-width: 650px;
     border-radius: 18px;
     margin-top: 20px;
     box-shadow: 0 0 45px rgba(255,120,180,0.35);
 }
 
-/* TEXT */
-#text {
-    white-space: pre-line;
+/* CINEMATIC TEXT */
+#messageBox {
     max-width: 760px;
     margin: 30px auto;
-    line-height: 1.9;
-    font-size: 18px;
+    line-height: 1.55;
+    font-size: 19px;
+}
+.line {
+    opacity: 0;
+    animation: fadeUp 1.2s forwards;
+    margin-bottom: 10px;
+}
+.signature {
+    font-family: 'Dancing Script', cursive;
+    font-size: 26px;
 }
 
-/* ANIMATION */
+/* PAGE 3 – ART STYLE */
+.art {
+    max-width: 720px;
+    margin: auto;
+    font-size: 20px;
+}
+.sketch {
+    border-left: 2px dashed rgba(255,255,255,.4);
+    padding-left: 18px;
+    margin: 18px 0;
+    animation: draw 2s ease forwards;
+}
+
+/* ANIMATIONS */
 @keyframes cinematic {
-    from { opacity: 0; transform: scale(1.12); filter: blur(6px); }
+    from { opacity: 0; transform: scale(1.1); filter: blur(6px); }
     to { opacity: 1; transform: scale(1); filter: blur(0); }
 }
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes draw {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
-/* REACTION BOX */
+/* REACTION */
 #reactionBox {
     position: fixed;
     bottom: 16px;
@@ -80,7 +110,6 @@ video {
     padding: 10px 14px;
     border-radius: 12px;
     display: none;
-    font-size: 14px;
 }
 </style>
 </head>
@@ -90,7 +119,7 @@ video {
 <!-- PAGE 1 -->
 <section id="page1" class="active">
     <h2>🔒 Private Access</h2>
-    <input id="password" placeholder="Enter password"><br><br>
+    <input id="password" placeholder="Enter password"><br>
     <button onclick="start()">Begin Experience 🎬</button>
 </section>
 
@@ -98,37 +127,33 @@ video {
 <section id="page2">
     <h1>✨ A Little Magic for Snigdha ✨</h1>
 
-    <video id="video" playsinline controls>
+    <video id="video" controls playsinline muted>
         <source src="video.mp4" type="video/mp4">
     </video>
 
-    <p id="text"></p>
+    <div id="messageBox"></div>
 
     <h3>💖 How did this feel?</h3>
-    <button onclick="react('😍 This made me smile')">😍 Smile</button><br><br>
-    <button onclick="react('🥹 I got emotional')">🥹 Emotional</button><br><br>
-    <button onclick="react('❤️ I loved it')">❤️ Loved it</button><br><br>
-
-    <button onclick="goPage(3)">Next → Why this day is special</button>
+    <button onclick="react('😍 Smile')">😍 Smile</button>
+    <button onclick="react('🥹 Emotional')">🥹 Emotional</button>
+    <button onclick="react('❤️ Loved it')">❤️ Loved it</button>
 </section>
 
 <!-- PAGE 3 -->
 <section id="page3">
     <h1>🌟 Why 31st December Is Special</h1>
-    <p id="text">
-For more than a thousand years,  
-31st December has symbolized endings and new beginnings.
 
-It is the final heartbeat of a year  
-and the first promise of tomorrow.
+    <div class="art">
+        <div class="sketch">✏️ The final breath of a year</div>
+        <div class="sketch">✏️ A pause between endings and beginnings</div>
+        <div class="sketch">✏️ A reminder that every close carries hope</div>
+        <div class="sketch">✏️ Born on a day that teaches renewal</div>
 
-Being born on this day means:
-• Strength to close chapters  
-• Courage to begin again  
-• A soul tied to renewal and hope  
-
-✨ Not everyone is born on a day that teaches the world how to move forward.
-    </p>
+        <p style="margin-top:30px;">
+            Not everyone is born on a day<br>
+            that understands how to move forward 🌙
+        </p>
+    </div>
 </section>
 
 <div id="reactionBox"></div>
@@ -136,54 +161,60 @@ Being born on this day means:
 <script>
 const PASSWORD = "28/12/2025";
 
-const MESSAGE = `Hey Snigdha ❤️
-
-This moment was quietly waiting just for you…
-
-I know you may not know who I am,  
-but I know you as someone truly special to me —  
-someone I proudly call my friend 🤍
-
-Someone wanted to make you smile today 🌸  
-and remind you that you are appreciated more than you know.
-
-🎉 HAPPY BIRTHDAY 🎉
-
-Also, an advance Happy New Year ✨  
-I couldn’t wish you on Instagram,  
-so I wanted to wish you in my own little way here.
-
-May this coming year bring you happiness,  
-peace, good health, and many beautiful moments.
-
-This was made only for you ✨`;
+const LINES = [
+"Hey Snigdha ❤️",
+"This moment was quietly waiting just for you…",
+"I know you may not know who I am,",
+"but I know you as someone truly special to me.",
+"Someone I proudly call my friend 🤍",
+"",
+"Someone wanted to make you smile today 🌸",
+"and remind you that you are appreciated more than you know.",
+"",
+"🎉 HAPPY BIRTHDAY 🎉",
+"",
+"Also, an advance Happy New Year ✨",
+"I couldn’t wish you on Instagram,",
+"so I wanted to wish you in my own little way here.",
+"",
+"May this coming year bring you happiness,",
+"peace, good health, and beautiful moments.",
+"",
+"This was made only for you ✨"
+];
 
 function start() {
-    if (document.getElementById("password").value !== PASSWORD) {
+    if (password.value !== PASSWORD) {
         alert("Wrong password");
         return;
     }
-
     goPage(2);
 
     const video = document.getElementById("video");
-    video.play().catch(err => {
-        alert("Tap the play button on the video once.");
-    });
+    video.play().catch(()=>{});
 
-    typeText();
+    typeLines();
 }
 
-function typeText() {
+function typeLines() {
+    const box = document.getElementById("messageBox");
     let i = 0;
-    const el = document.getElementById("text");
-    el.innerHTML = "";
 
-    const t = setInterval(() => {
-        el.innerHTML += MESSAGE.charAt(i);
+    const interval = setInterval(() => {
+        if (i >= LINES.length) {
+            clearInterval(interval);
+            setTimeout(() => goPage(3), 3500);
+            return;
+        }
+
+        const div = document.createElement("div");
+        div.className = "line";
+        if (LINES[i].includes("Snigdha")) div.classList.add("signature");
+        div.textContent = LINES[i];
+        box.appendChild(div);
+
         i++;
-        if (i >= MESSAGE.length) clearInterval(t);
-    }, 40);
+    }, 900);
 }
 
 function goPage(n) {
@@ -192,10 +223,10 @@ function goPage(n) {
 }
 
 function react(val) {
+    if (localStorage.getItem("reaction")) return;
     localStorage.setItem("reaction", val);
-    const box = document.getElementById("reactionBox");
-    box.style.display = "block";
-    box.innerHTML = "💌 Reaction: <b>" + val + "</b>";
+    reactionBox.style.display = "block";
+    reactionBox.innerHTML = "💌 Reaction: <b>" + val + "</b>";
 }
 </script>
 
